@@ -6,7 +6,7 @@ let noteID = 0;
 
 function newNote() {
 
-    // Stuff for adding the new title div
+    // Stuff for adding the new title div.
 
     let insertTitle = document.createElement("div"); 
     let titleBox = document.getElementById("titleBox");
