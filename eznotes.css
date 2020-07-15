@@ -1,0 +1,41 @@
+body {
+    font-size: 1.5vw;
+    padding-top: 2%;
+    text-align: center;
+    
+}
+
+.parent {
+    background-color: lightgreen;
+    margin: 0 auto;
+    width: 90%;
+    display: flex;
+
+}
+
+.title-box {
+    background-color: lightpink;
+    float: left;
+    width: 38.5%;
+    margin: 1% 0.5% 1% 1%;
+    height: 80vh;
+    overflow: auto;
+}
+
+.two {
+    background-color: lightskyblue;
+    float: left;
+    width: 58.5%;
+    margin: 1% 1% 1% 0.5%;
+}
+
+.title {
+    background: lightgrey;
+    text-align: left;
+    margin: 1% 1% 1% 1%;
+    padding: 1% 1% 1% 1%;
+}
+
+.title:hover {
+    cursor: pointer;
+}
