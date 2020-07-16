@@ -22,7 +22,7 @@ body {
     overflow: auto;
 }
 
-.two {
+.info-box {
     background-color: lightskyblue;
     float: left;
     width: 58.5%;
@@ -38,4 +38,19 @@ body {
 
 .title:hover {
     cursor: pointer;
+}
+
+.title-input {
+    margin: 5% 1% 1% 1%;
+}
+
+.message-input {
+    margin: 5% 1% 1% 1%;
+    width: 80%;
+    height: 50vh;
+}
+
+.save-button {
+    margin: 5% 1% 1% 1%;
+    width: 30%;
 }

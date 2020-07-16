@@ -1,46 +1,93 @@
-let noteTitle, noteBody, noteList, currNoteID;
+let noteTitle, noteBody, noteList, currNoteID, initialDisplayCheck, insertTitle, titleBox, initialTitle, initialMessage, initialSave, infoBox;
+
+initialDisplayCheck = false;
 
 noteList = [];
 
 let noteID = 0;
 
-function newNote() {
+function newNote() { // Creates a new note when you press the "New Note" button
 
     // Stuff for adding the new title div.
 
-    let insertTitle = document.createElement("div"); 
-    let titleBox = document.getElementById("titleBox");
+    insertTitle = document.createElement("div"); 
+    titleBox = document.getElementById("titleBox");
 
-    insertTitle.innerHTML = "Untitled Note";
+    insertTitle.innerHTML = "Untitled Note " + noteID;
     insertTitle.className = "title";
     insertTitle.id = "note" + noteID;
 
     titleBox.appendChild(insertTitle);
 
-    noteList.push(new Note(noteID)) // Pushes new note object into the noteList.
+    noteList.push([noteID, new Note(noteID)]) // Pushes new note object along with its permanent ID so I can keep track of it in the array
 
-    insertTitle.setAttribute("onclick", "noteList[" + noteID + "].showNote()"); // Implement noteID like this so that it logs the noteID at the time rather than the variable
+    // Line below sets an onclick attribute on each title div allows you to access the correct object in noteList using its permanent ID
 
-    noteID += 1;
+    insertTitle.setAttribute("onclick", "noteList[searchNoteList(" + noteID + ")][1].showNote()");
+
+    if (!initialDisplayCheck) { // If display isn't present, generate the elements on the right side
+        initialDisplay();
+    }
+    
+    noteID += 1; // New ID every time we generate a note
 }
 
-/*
-CURRENT ISSUE: Need to find a way to access the note within the array that isn't dependent on the noteID being the index of the array. Reason why is because deleting
-a note would shift the array indexes (eg. note at index 1 would now be at index 0)
+function initialDisplay() { // Generates the info display on the right side for the first time
 
-OTHER IDEAS: Make it so that when a note gets deleted it is simply turned into a 0 or something within the array in order to subtitute for the object, kinda ugly though
-*/
+    // These elements will be reused to simply display the info from notes rather than having to regenerate the elements each time you want to see a note's info
+
+    initialDisplayCheck = true;
+    initialTitle = document.createElement("input");
+    initialMessage = document.createElement("textarea");
+    initialSave = document.createElement("button");
+    infoBox = document.getElementById("infoBox");
+
+    initialTitle.className = "title-input";
+    initialTitle.id = "titleInput";
+    initialMessage.className = "message-input";
+    initialMessage.id = "messageInput";
+    initialSave.className = "save-button";
+    initialSave.id = "saveButton";
+    initialSave.innerHTML = "Save";
+
+    infoBox.appendChild(initialTitle);
+    infoBox.appendChild(initialMessage);
+    infoBox.appendChild(initialSave);
+
+    noteList[searchNoteList(noteID)][1].showNote();
+}
+
+function searchNoteList(id) { // Find note object using its permanent ID
+    for (let i = 0; i < noteList.length; i++) {
+        if (noteList[i][0] == id) { // When it finds index of permanent ID, return the index so it can be searched
+            return i;
+        }
+    }
+}
 
 class Note {
     constructor(noteID) {
         this.noteID = noteID;
-        this.noteTitle = "Untitled Note";
+        this.noteTitle = "Untitled Note " + this.noteID;
         this.noteBody = "Write your note here...";
     }
 
-    showNote() {
-        console.log(this.noteID);
-        console.log(this.noteTitle);
-        console.log(this.noteBody);
+    showNote() { // Changes info on right side to the appropriate note's info
+        document.getElementById("titleInput").value = this.noteTitle;
+        document.getElementById("messageInput").value = this.noteBody;
+        initialSave.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].saveNote()"); // Sets correct onclick attribute for current note
+    }
+
+    saveNote() { // When they hit save it saves whatever they wrote in for the note
+        this.noteTitle = document.getElementById("titleInput").value;
+        this.noteBody = document.getElementById("messageInput").value;
+
+        // Checks if they saved an empty note title and sets title box as untitled note if they did
+
+        if (this.noteTitle === "") {
+            document.getElementById("note" + this.noteID).innerHTML = "Untitled Note " + this.noteID;
+        } else {
+            document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
+        }
     }
 }
