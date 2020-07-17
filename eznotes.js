@@ -1,4 +1,5 @@
-let noteTitle, noteBody, noteList, currNoteID, initialDisplayCheck, insertTitle, titleBox, initialTitle, initialMessage, initialSave, initialDelete, infoBox, locID;
+let noteTitle, noteBody, noteList, currNoteID, initialDisplayCheck, insertTitle, titleBox, initialTitle, initialMessage, initialSave, initialDelete, initialColor, 
+redColor, blueColor, greenColor, greyColor, infoBox, locID;
 
 initialDisplayCheck = false;
 
@@ -43,6 +44,11 @@ function initialDisplay() { // Generates the info display on the right side for 
     initialMessage = document.createElement("textarea");
     initialSave = document.createElement("button");
     initialDelete = document.createElement("button");
+    initialColor = document.createElement("select");
+    redColor = document.createElement("option");
+    blueColor = document.createElement("option");
+    greenColor = document.createElement("option");
+    greyColor = document.createElement("option");
 
     infoBox = document.getElementById("infoBox");
 
@@ -56,11 +62,31 @@ function initialDisplay() { // Generates the info display on the right side for 
     initialDelete.className = "delete-button";
     initialDelete.id = "deleteButton";
     initialDelete.innerHTML = "Delete";
+    initialColor.className = "color-selector";
+    initialColor.id = "colorSelector";
+    redColor.className = "red-color";
+    redColor.id = "redColor";
+    redColor.innerHTML = "Red";
+    blueColor.className = "blue-color";
+    blueColor.id = "blueColor";
+    blueColor.innerHTML = "Blue";
+    greenColor.className = "green-color";
+    greenColor.id = "greenColor";
+    greenColor.innerHTML = "Green";
+    greyColor.className = "grey-color";
+    greyColor.id = "greyColor";
+    greyColor.innerHTML = "Grey";
 
     infoBox.appendChild(initialTitle);
     infoBox.appendChild(initialMessage);
     infoBox.appendChild(initialSave);
     infoBox.appendChild(initialDelete);
+    infoBox.appendChild(initialColor);
+
+    initialColor.appendChild(greyColor);
+    initialColor.appendChild(redColor);
+    initialColor.appendChild(blueColor);
+    initialColor.appendChild(greenColor);
 }
 
 function searchNoteList(id) { // Find note object using its permanent ID
@@ -97,7 +123,12 @@ class Note {
         if (this.noteTitle === "") {
             document.getElementById("note" + this.noteID).innerHTML = "Untitled Note " + this.noteID;
         } else {
-            document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
+            if (this.noteTitle.length > 45) { // Prevents the title from being too long
+                document.getElementById("note" + this.noteID).innerHTML = this.noteTitle.slice(0, 45) + "...";
+            } else {
+                document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
+            }
+            
         }
     }
 
@@ -111,6 +142,7 @@ class Note {
             initialMessage.remove();
             initialSave.remove();
             initialDelete.remove();
+            initialColor.remove();
             initialDisplayCheck = false;
         } else {
             if (locID == 0) { // If note being removed is at the front of the noteList, display info of next one
