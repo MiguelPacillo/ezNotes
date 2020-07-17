@@ -1,4 +1,4 @@
-let noteTitle, noteBody, noteList, currNoteID, initialDisplayCheck, insertTitle, titleBox, initialTitle, initialMessage, initialSave, infoBox;
+let noteTitle, noteBody, noteList, currNoteID, initialDisplayCheck, insertTitle, titleBox, initialTitle, initialMessage, initialSave, initialDelete, infoBox, locID;
 
 initialDisplayCheck = false;
 
@@ -28,6 +28,8 @@ function newNote() { // Creates a new note when you press the "New Note" button
     if (!initialDisplayCheck) { // If display isn't present, generate the elements on the right side
         initialDisplay();
     }
+
+    noteList[searchNoteList(noteID)][1].showNote();
     
     noteID += 1; // New ID every time we generate a note
 }
@@ -40,6 +42,8 @@ function initialDisplay() { // Generates the info display on the right side for 
     initialTitle = document.createElement("input");
     initialMessage = document.createElement("textarea");
     initialSave = document.createElement("button");
+    initialDelete = document.createElement("button");
+
     infoBox = document.getElementById("infoBox");
 
     initialTitle.className = "title-input";
@@ -49,12 +53,14 @@ function initialDisplay() { // Generates the info display on the right side for 
     initialSave.className = "save-button";
     initialSave.id = "saveButton";
     initialSave.innerHTML = "Save";
+    initialDelete.className = "delete-button";
+    initialDelete.id = "deleteButton";
+    initialDelete.innerHTML = "Delete";
 
     infoBox.appendChild(initialTitle);
     infoBox.appendChild(initialMessage);
     infoBox.appendChild(initialSave);
-
-    noteList[searchNoteList(noteID)][1].showNote();
+    infoBox.appendChild(initialDelete);
 }
 
 function searchNoteList(id) { // Find note object using its permanent ID
@@ -75,7 +81,11 @@ class Note {
     showNote() { // Changes info on right side to the appropriate note's info
         document.getElementById("titleInput").value = this.noteTitle;
         document.getElementById("messageInput").value = this.noteBody;
-        initialSave.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].saveNote()"); // Sets correct onclick attribute for current note
+
+        // Sets correct onclick attributes for current note
+
+        initialSave.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].saveNote()"); 
+        initialDelete.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].deleteNote()");
     }
 
     saveNote() { // When they hit save it saves whatever they wrote in for the note
@@ -88,6 +98,26 @@ class Note {
             document.getElementById("note" + this.noteID).innerHTML = "Untitled Note " + this.noteID;
         } else {
             document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
+        }
+    }
+
+    deleteNote() { // Delete button method
+        locID = searchNoteList(this.noteID); // Logs the index of the note that is being deleted
+        document.getElementById("note" + this.noteID).remove(); // Removes title div on the left
+        noteList.splice(locID, 1); // Removes note at that index
+        
+        if (noteList.length < 1) { // If the last note is being deleted, the info elements gets removed
+            initialTitle.remove();
+            initialMessage.remove();
+            initialSave.remove();
+            initialDelete.remove();
+            initialDisplayCheck = false;
+        } else {
+            if (locID == 0) { // If note being removed is at the front of the noteList, display info of next one
+                noteList[0][1].showNote();
+            } else { // If note being removed is not at front, display info of previous one
+                noteList[locID - 1][1].showNote();
+            }
         }
     }
 }
