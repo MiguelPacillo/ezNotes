@@ -102,6 +102,7 @@ class Note {
         this.noteID = noteID;
         this.noteTitle = "Untitled Note " + this.noteID;
         this.noteBody = "Write your note here...";
+        this.noteColor = "Grey";
     }
 
     showNote() { // Changes info on right side to the appropriate note's info
@@ -117,6 +118,7 @@ class Note {
     saveNote() { // When they hit save it saves whatever they wrote in for the note
         this.noteTitle = document.getElementById("titleInput").value;
         this.noteBody = document.getElementById("messageInput").value;
+        this.noteColor = colorSelector.options[colorSelector.selectedIndex].value;
 
         // Checks if they saved an empty note title and sets title box as untitled note if they did
 
@@ -128,7 +130,6 @@ class Note {
             } else {
                 document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
             }
-            
         }
     }
 

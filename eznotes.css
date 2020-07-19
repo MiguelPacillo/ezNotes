@@ -1,41 +1,45 @@
 body {
-    font-size: 1.5vw;
     padding-top: 2%;
     text-align: center;
-    
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(29, 29, 29);
 }
 
 .parent {
-    background-color: lightgreen;
+    background-color: rgb(44, 50, 54);
     margin: 0 auto;
-    width: 90%;
+    width: 80%;
     display: flex;
-
+    border-radius: 20px;
 }
 
 .title-box {
-    background-color: lightpink;
+    background-color: rgb(64, 69, 73);
     float: left;
     width: 38.5%;
     margin: 1% 0.5% 1% 1%;
     height: 80vh;
     overflow: auto;
+    border-radius: 20px;
 }
 
 .info-box {
-    background-color: lightskyblue;
+    background: rgba(211, 211, 211, 0.664);
     float: left;
     width: 58.5%;
     margin: 1% 1% 1% 0.5%;
     height: 80vh;
+    border-radius: 20px;
 }
 
 .title {
-    background: lightgrey;
+    background: rgba(211, 211, 211, 0.664);
     text-align: left;
-    margin: 1% 1% 1% 1%;
+    margin: 2% 2% 2% 2%;
     padding: 1% 1% 1% 1%;
     word-wrap: break-word;
+    border-radius: 8px;
+    font-size: 1.3vw;
 }
 
 .title:hover {
@@ -45,6 +49,15 @@ body {
 .title-input {
     margin: 5% 1% 1% 1%;
     width: 50%;
+    height: 4vh;
+    font-size: 1.3vw;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(211, 211, 211, 0.979);
+}
+
+.title-input:focus {
+    outline: none;
 }
 
 .message-input {
@@ -52,24 +65,96 @@ body {
     width: 80%;
     height: 50vh;
     resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 8px;
+    padding: 4px;
+    font-size: 1vw;
+    border: none;
+    background-color: rgba(211, 211, 211, 0.979);
+}
+
+.message-input:focus {
+    outline: none;
 }
 
 .save-button {
-    margin: 5% 1% 1% 1%;
+    margin: 4% 0.3% 1% 1%;
     width: 20%;
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+    border: none;
+    background-color: rgb(64, 69, 73);
+    cursor: pointer;
+    padding: 1% 1% 1% 1%;
+    font-size: 0.7vw;
+    color: rgba(211, 211, 211, 0.979);
+}
+
+.save-button:focus {
+    outline: none;
+}
+
+.save-button:active {
+    background-color: rgb(29, 29, 29);
 }
 
 .delete-button {
-    margin: 5% 1% 1% 1%;
+    margin: 4% 0.3% 1% 0.3%;
     width: 20%;
+    border: none;
+    background-color: rgb(64, 69, 73);
+    cursor: pointer;
+    padding: 1% 1% 1% 1%;
+    font-size: 0.7vw;
+    color: rgba(211, 211, 211, 0.979);
+}
+
+.delete-button:focus {
+    outline: none;
+}
+
+.delete-button:active {
+    background-color: rgb(29, 29, 29);
 }
 
 .note-button {
-    margin: 1% 1% 1% 1%;
+    margin: 3% 1% 1% 1%;
     width: 40%;
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+    border: none;
+    background-color: rgb(44, 50, 54);
+    cursor: pointer;
+    padding: 1% 1% 1% 1%;
+    font-size: 0.8vw;
+    color: rgba(211, 211, 211, 0.979);
+}
+
+.note-button:focus {
+    outline: none;
+}
+
+.note-button:active {
+    background-color: rgb(29, 29, 29);
 }
 
 .color-selector {
-    margin: 5% 1% 1% 1%;
-    width: 10%;
+    margin: 4% 1% 1% 0.3%;
+    width: 20%;
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
+    border: none;
+    background-color: rgb(64, 69, 73);
+    cursor: pointer;
+    padding: 1% 1% 1% 1%;
+    font-size: 0.62vw;
+    color: rgba(211, 211, 211, 0.979);
+}
+
+.color-selector:focus {
+    outline: none;
+}
+
+.color-selector:active {
+    background-color: rgb(29, 29, 29);
 }
