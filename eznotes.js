@@ -22,7 +22,7 @@ function newNote() { // Creates a new note when you press the "New Note" button
 
     noteList.push([noteID, new Note(noteID)]) // Pushes new note object along with its permanent ID so I can keep track of it in the array
 
-    // Line below sets an onclick attribute on each title div allows you to access the correct object in noteList using its permanent ID
+    // Line below sets an onclick attribute on each title div that allows you to access the correct object in noteList using its permanent ID
 
     insertTitle.setAttribute("onclick", "noteList[searchNoteList(" + noteID + ")][1].showNote()");
 
@@ -30,7 +30,7 @@ function newNote() { // Creates a new note when you press the "New Note" button
         initialDisplay();
     }
 
-    noteList[searchNoteList(noteID)][1].showNote();
+    noteList[searchNoteList(noteID)][1].showNote(); // Show the new note generated on right side
     
     noteID += 1; // New ID every time we generate a note
 }
@@ -53,29 +53,23 @@ function initialDisplay() { // Generates the info display on the right side for 
     infoBox = document.getElementById("infoBox");
 
     initialTitle.className = "title-input";
-    initialTitle.id = "titleInput";
     initialMessage.className = "message-input";
-    initialMessage.id = "messageInput";
     initialSave.className = "save-button";
-    initialSave.id = "saveButton";
     initialSave.innerHTML = "Save";
     initialDelete.className = "delete-button";
-    initialDelete.id = "deleteButton";
     initialDelete.innerHTML = "Delete";
     initialColor.className = "color-selector";
     initialColor.id = "colorSelector";
-    redColor.className = "red-color";
-    redColor.id = "redColor";
+
     redColor.innerHTML = "Red";
-    blueColor.className = "blue-color";
-    blueColor.id = "blueColor";
+    redColor.value = "rgb(162, 134, 134)";
     blueColor.innerHTML = "Blue";
-    greenColor.className = "green-color";
-    greenColor.id = "greenColor";
+    blueColor.value = "rgb(134, 136, 162)";
     greenColor.innerHTML = "Green";
-    greyColor.className = "grey-color";
-    greyColor.id = "greyColor";
+    greenColor.value = "rgb(134, 162, 145)";
     greyColor.innerHTML = "Grey";
+    greyColor.value = "rgba(211, 211, 211, 0.664)";
+
 
     infoBox.appendChild(initialTitle);
     infoBox.appendChild(initialMessage);
@@ -102,23 +96,40 @@ class Note {
         this.noteID = noteID;
         this.noteTitle = "Untitled Note " + this.noteID;
         this.noteBody = "Write your note here...";
-        this.noteColor = "Grey";
+        this.noteColor = "rgba(211, 211, 211, 0.664)";
+        this.noteColorIndex = 0;
     }
 
     showNote() { // Changes info on right side to the appropriate note's info
-        document.getElementById("titleInput").value = this.noteTitle;
-        document.getElementById("messageInput").value = this.noteBody;
+        initialTitle.value = this.noteTitle;
+        initialMessage.value = this.noteBody;
+        initialColor.selectedIndex = this.noteColorIndex;
+        document.getElementById("infoBox").style.backgroundColor = this.noteColor;
 
         // Sets correct onclick attributes for current note
 
         initialSave.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].saveNote()"); 
         initialDelete.setAttribute("onclick", "noteList[searchNoteList(" + this.noteID + ")][1].deleteNote()");
+
+        // Make title on left side darker for note that is being shown
+
+        currNoteID = this.noteID;
+
+        for (let i = 0; i < noteList.length; i++) {
+            if (noteList[i][0] == currNoteID) {
+                document.getElementById("note" + currNoteID).style.opacity = "0.6";
+            } else {
+                document.getElementById("note" + noteList[i][0]).style.opacity = "1";
+            }
+            
+        }
     }
 
-    saveNote() { // When they hit save it saves whatever they wrote in for the note
-        this.noteTitle = document.getElementById("titleInput").value;
-        this.noteBody = document.getElementById("messageInput").value;
+    saveNote() { // When they hit save it saves whatever they wrote in for the note or selected color from drop down
+        this.noteTitle = initialTitle.value;
+        this.noteBody = initialMessage.value;
         this.noteColor = colorSelector.options[colorSelector.selectedIndex].value;
+        this.noteColorIndex = initialColor.selectedIndex;
 
         // Checks if they saved an empty note title and sets title box as untitled note if they did
 
@@ -131,6 +142,11 @@ class Note {
                 document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
             }
         }
+
+        // Set correct color for title and info
+
+        document.getElementById("note" + this.noteID).style.backgroundColor = this.noteColor;
+        document.getElementById("infoBox").style.backgroundColor = this.noteColor;
     }
 
     deleteNote() { // Delete button method
