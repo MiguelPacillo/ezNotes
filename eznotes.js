@@ -4,6 +4,7 @@ redColor, blueColor, greenColor, greyColor, infoBox, locID;
 initialDisplayCheck = false;
 
 noteList = [];
+downloadList = [];
 
 let noteID = 0;
 
@@ -91,6 +92,29 @@ function searchNoteList(id) { // Find note object using its permanent ID
     }
 }
 
+function download() { // Generates a JSON file containing your saved notes
+
+    let downloadList = [];
+
+    for (let i = 0; i < noteList.length; i++) {
+        let obj = noteList[i][1];
+        downloadList.push([obj.noteID, obj.noteTitle, obj.noteBody, obj.noteColor, obj.noteColorIndex]) 
+    }
+
+    let jsonDL = JSON.stringify(downloadList);
+    let blob = new Blob([jsonDL], {type: "application/json"});
+
+    downloadFile(blob, "save.JSON");
+}
+
+function downloadFile(blob, filename) { // Creates download onclick event for button
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+}
+
 class Note {
     constructor(noteID) {
         this.noteID = noteID;
@@ -113,11 +137,9 @@ class Note {
 
         // Make title on left side darker for note that is being shown
 
-        currNoteID = this.noteID;
-
         for (let i = 0; i < noteList.length; i++) {
-            if (noteList[i][0] == currNoteID) {
-                document.getElementById("note" + currNoteID).style.opacity = "0.6";
+            if (noteList[i][0] == this.noteID) {
+                document.getElementById("note" + this.noteID).style.opacity = "0.6";
             } else {
                 document.getElementById("note" + noteList[i][0]).style.opacity = "1";
             }
@@ -160,6 +182,7 @@ class Note {
             initialSave.remove();
             initialDelete.remove();
             initialColor.remove();
+            document.getElementById("infoBox").style.backgroundColor = greyColor.value;
             initialDisplayCheck = false;
         } else {
             if (locID == 0) { // If note being removed is at the front of the noteList, display info of next one
