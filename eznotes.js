@@ -4,7 +4,6 @@ redColor, blueColor, greenColor, greyColor, infoBox, locID;
 initialDisplayCheck = false;
 
 noteList = [];
-downloadList = [];
 
 let noteID = 0;
 
@@ -92,13 +91,15 @@ function searchNoteList(id) { // Find note object using its permanent ID
     }
 }
 
+
+
 function download() { // Generates a JSON file containing your saved notes
 
     let downloadList = [];
 
     for (let i = 0; i < noteList.length; i++) {
         let obj = noteList[i][1];
-        downloadList.push([obj.noteID, obj.noteTitle, obj.noteBody, obj.noteColor, obj.noteColorIndex]) 
+        downloadList.push([obj.noteTitle, obj.noteBody, obj.noteColor, obj.noteColorIndex]) 
     }
 
     let jsonDL = JSON.stringify(downloadList);
@@ -113,6 +114,39 @@ function downloadFile(blob, filename) { // Creates download onclick event for bu
     a.href = url;
     a.download = filename;
     a.click();
+}
+
+function upload() {
+
+    document.getElementById("selectFiles").click();
+
+    let files = document.getElementById("selectFiles").files[0];
+
+    let reader = new FileReader();
+
+    reader.onload = function() {
+        let fileContent = JSON.parse(reader.result);
+
+        for (let i = 0; i < noteList.length; i++) {
+            document.getElementById("note" + noteList[i][1].noteID).remove();
+        }
+
+        noteList = [];
+        noteID = 0;
+
+        for (let i = 0; i < fileContent.length; i++) {
+            newNote();
+            noteList[i][1].noteTitle = fileContent[i][0];
+            noteList[i][1].noteBody = fileContent[i][1];
+            noteList[i][1].noteColor = fileContent[i][2];
+            noteList[i][1].noteColorIndex = fileContent[i][3];
+            noteList[i][1].setTitle();
+        }
+
+        noteList[noteList.length - 1][1].showNote();
+    }
+    reader.readAsText(files);
+    
 }
 
 class Note {
@@ -191,5 +225,10 @@ class Note {
                 noteList[locID - 1][1].showNote();
             }
         }
+    }
+
+    setTitle() {
+        document.getElementById("note" + this.noteID).style.backgroundColor = this.noteColor;
+        document.getElementById("note" + this.noteID).innerHTML = this.noteTitle;
     }
 }
