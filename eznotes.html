@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="eznotes.css">
-    <title>CSS Practice</title>
+    <title>ezNotes</title>
 
     <script src="eznotes.js"></script>
 
@@ -14,12 +14,12 @@
         <div class="title-box" id="titleBox">
             <button onclick="newNote()" class="note-button">New Note</button>
             <button onclick="download()" class="download-button">Download</button>
-            <button onclick="upload()" class="upload-button">Upload</button>
+            <button onclick="uploadBtn()" class="upload-button">Upload</button>
         </div>
         <div class="info-box" id="infoBox"></div>
     </div>
 
-    <input type="file" id="selectFiles" hidden="hidden">
+    <input type="file" id="selectFiles" hidden="hidden" onchange="upload()">
     
 </body>
 </html>

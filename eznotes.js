@@ -91,21 +91,31 @@ function searchNoteList(id) { // Find note object using its permanent ID
     }
 }
 
-
-
 function download() { // Generates a JSON file containing your saved notes
 
-    let downloadList = [];
+    if (noteList.length > 0) { // Makes sure you're not saving an empty note set
+        let downloadList = [];
 
-    for (let i = 0; i < noteList.length; i++) {
-        let obj = noteList[i][1];
-        downloadList.push([obj.noteTitle, obj.noteBody, obj.noteColor, obj.noteColorIndex]) 
+        for (let i = 0; i < noteList.length; i++) { // Deconstructs each note object and pushes it into downloadList array
+            let obj = noteList[i][1];
+            downloadList.push([obj.noteTitle, obj.noteBody, obj.noteColor, obj.noteColorIndex])
+        }
+
+        downloadList.push("ezCheck"); // Pushes a check to mark it as a valid save file
+
+        let jsonDL = JSON.stringify(downloadList);
+        let blob = new Blob([jsonDL], { type: "application/json" }); // Makes a blob containing the downloadList array
+
+        let date = new Date();
+
+        let saveName = "eznotes-" + date.getDate()+ "-" + date.getMonth() + "-" + date.getFullYear(); 
+
+        downloadFile(blob, saveName + ".JSON");
+    } else {
+        alert("Error: Note set cannot be empty.");
     }
 
-    let jsonDL = JSON.stringify(downloadList);
-    let blob = new Blob([jsonDL], {type: "application/json"});
-
-    downloadFile(blob, "save.JSON");
+    
 }
 
 function downloadFile(blob, filename) { // Creates download onclick event for button
@@ -116,34 +126,46 @@ function downloadFile(blob, filename) { // Creates download onclick event for bu
     a.click();
 }
 
+function uploadBtn() { // Allows upload button to pick a save file
+    document.getElementById("selectFiles").click();
+}
+
 function upload() {
 
-    document.getElementById("selectFiles").click();
-
     let files = document.getElementById("selectFiles").files[0];
-
     let reader = new FileReader();
 
-    reader.onload = function() {
-        let fileContent = JSON.parse(reader.result);
+    reader.onload = function() { // Parses uploaded save file
 
-        for (let i = 0; i < noteList.length; i++) {
-            document.getElementById("note" + noteList[i][1].noteID).remove();
+        try {
+            let fileContent = JSON.parse(reader.result);
+        } catch(err) {
+            alert("Error: Invalid file. Please upload a valid ezNotes save");
+        }
+        
+        if (fileContent[fileContent.length - 1] == "ezCheck") {
+            for (let i = 0; i < noteList.length; i++) {
+                document.getElementById("note" + noteList[i][1].noteID).remove();
+            }
+    
+            noteList = [];
+            noteID = 0;
+    
+            for (let i = 0; i < fileContent.length - 1; i++) {
+                newNote();
+                noteList[i][1].noteTitle = fileContent[i][0];
+                noteList[i][1].noteBody = fileContent[i][1];
+                noteList[i][1].noteColor = fileContent[i][2];
+                noteList[i][1].noteColorIndex = fileContent[i][3];
+                noteList[i][1].setTitle();
+            }
+    
+            noteList[noteList.length - 1][1].showNote();
+        } else {
+            alert("Error: Invalid file. Please upload a valid ezNotes save");
         }
 
-        noteList = [];
-        noteID = 0;
-
-        for (let i = 0; i < fileContent.length; i++) {
-            newNote();
-            noteList[i][1].noteTitle = fileContent[i][0];
-            noteList[i][1].noteBody = fileContent[i][1];
-            noteList[i][1].noteColor = fileContent[i][2];
-            noteList[i][1].noteColorIndex = fileContent[i][3];
-            noteList[i][1].setTitle();
-        }
-
-        noteList[noteList.length - 1][1].showNote();
+        
     }
     reader.readAsText(files);
     
