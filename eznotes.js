@@ -130,42 +130,41 @@ function uploadBtn() { // Allows upload button to pick a save file
     document.getElementById("selectFiles").click();
 }
 
-function upload() {
+function upload() { // Parses uploaded save file
 
     let files = document.getElementById("selectFiles").files[0];
     let reader = new FileReader();
 
-    reader.onload = function() { // Parses uploaded save file
+    reader.onload = function() { 
 
-        try {
+        try { // Makes sure save file can be parsed
             let fileContent = JSON.parse(reader.result);
-        } catch(err) {
-            alert("Error: Invalid file. Please upload a valid ezNotes save");
-        }
-        
-        if (fileContent[fileContent.length - 1] == "ezCheck") {
-            for (let i = 0; i < noteList.length; i++) {
-                document.getElementById("note" + noteList[i][1].noteID).remove();
+
+            if (fileContent[fileContent.length - 1] == "ezCheck") { // Makes sure save file is valid JSON
+                for (let i = 0; i < noteList.length; i++) {
+                    document.getElementById("note" + noteList[i][1].noteID).remove(); // Removes previous titles
+                }
+
+                noteList = [];
+                noteID = 0;
+
+                for (let i = 0; i < fileContent.length - 1; i++) { // Repopulate note objects
+                    newNote();
+                    noteList[i][1].noteTitle = fileContent[i][0];
+                    noteList[i][1].noteBody = fileContent[i][1];
+                    noteList[i][1].noteColor = fileContent[i][2];
+                    noteList[i][1].noteColorIndex = fileContent[i][3];
+                    noteList[i][1].setTitle();
+                }
+
+                noteList[noteList.length - 1][1].showNote();
+            } else { // Else give error
+                alert("Error: Invalid file. Please upload a valid ezNotes save");
             }
-    
-            noteList = [];
-            noteID = 0;
-    
-            for (let i = 0; i < fileContent.length - 1; i++) {
-                newNote();
-                noteList[i][1].noteTitle = fileContent[i][0];
-                noteList[i][1].noteBody = fileContent[i][1];
-                noteList[i][1].noteColor = fileContent[i][2];
-                noteList[i][1].noteColorIndex = fileContent[i][3];
-                noteList[i][1].setTitle();
-            }
-    
-            noteList[noteList.length - 1][1].showNote();
-        } else {
+        } catch (err) { // Else give error
             alert("Error: Invalid file. Please upload a valid ezNotes save");
         }
 
-        
     }
     reader.readAsText(files);
     
